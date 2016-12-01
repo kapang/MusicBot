@@ -680,7 +680,7 @@ class MusicBot(discord.Client):
         print("  Default volume: %s%%" % int(self.config.default_volume * 100))
         print("  Skip threshold: %s votes or %s%%" % (
             self.config.skips_required, self._fixg(self.config.skip_ratio_required * 100)))
-        print("  Now Playing @mentions: " + ['Disabled', 'Enabled'][self.config.now_playing_mentions])
+        print("  The Bean is bouncing to: @mentions: " + ['Disabled', 'Enabled'][self.config.now_playing_mentions])
         print("  Auto-Summon: " + ['Disabled', 'Enabled'][self.config.auto_summon])
         print("  Auto-Playlist: " + ['Disabled', 'Enabled'][self.config.auto_playlist])
         print("  Auto-Pause: " + ['Disabled', 'Enabled'][self.config.auto_pause])
@@ -754,7 +754,8 @@ class MusicBot(discord.Client):
 
             helpmsg += ", ".join(commands)
             helpmsg += "```"
-            helpmsg += "https://github.com/SexualRhinoceros/MusicBot/wiki/Commands-list"
+            helpmsg += 'Isn\'t Bean Bot so nice to give you commands? Now don\'t cook me!'
+            #helpmsg += "https://github.com/SexualRhinoceros/MusicBot/wiki/Commands-list"
 
             return Response(helpmsg, reply=True, delete_after=60)
 
@@ -1276,16 +1277,16 @@ class MusicBot(discord.Client):
             prog_str = '`[%s/%s]`' % (song_progress, song_total)
 
             if player.current_entry.meta.get('channel', False) and player.current_entry.meta.get('author', False):
-                np_text = "Now Playing: **%s** added by **%s** %s\n" % (
+                np_text = "The Bean is bouncing to: **%s** added by **%s** %s\n" % (
                     player.current_entry.title, player.current_entry.meta['author'].name, prog_str)
             else:
-                np_text = "Now Playing: **%s** %s\n" % (player.current_entry.title, prog_str)
+                np_text = "The Bean is bouncing to: **%s** %s\n" % (player.current_entry.title, prog_str)
 
             self.server_specific_data[server]['last_np_msg'] = await self.safe_send_message(channel, np_text)
             await self._manual_delete_check(message)
         else:
             return Response(
-                'There are no songs queued! Queue something with {}play.'.format(self.config.command_prefix),
+                'You can\'t fool the Bean, there are no songs queued! Queue something with {}play.'.format(self.config.command_prefix),
                 delete_after=30
             )
 
@@ -1400,7 +1401,7 @@ class MusicBot(discord.Client):
         """
 
         if player.is_stopped:
-            raise exceptions.CommandError("Can't skip! The player is not playing!", expire_in=20)
+            raise exceptions.CommandError("The Bean can\'t skip when nothing is playing!", expire_in=20)
 
         if not player.current_entry:
             if player.playlist.peek():
@@ -1521,10 +1522,10 @@ class MusicBot(discord.Client):
             prog_str = '`[%s/%s]`' % (song_progress, song_total)
 
             if player.current_entry.meta.get('channel', False) and player.current_entry.meta.get('author', False):
-                lines.append("Now Playing: **%s** added by **%s** %s\n" % (
+                lines.append("The Bean is bouncing to: **%s** added by **%s** %s\n" % (
                     player.current_entry.title, player.current_entry.meta['author'].name, prog_str))
             else:
-                lines.append("Now Playing: **%s** %s\n" % (player.current_entry.title, prog_str))
+                lines.append("The Bean is bouncing to: **%s** %s\n" % (player.current_entry.title, prog_str))
 
         for i, item in enumerate(player.playlist, 1):
             if item.meta.get('channel', False) and item.meta.get('author', False):
@@ -1546,7 +1547,7 @@ class MusicBot(discord.Client):
 
         if not lines:
             lines.append(
-                'There are no songs queued! Queue something with {}play.'.format(self.config.command_prefix))
+                'You can\'t fool the Bean, there are no songs queued! Queue something with {}play.'.format(self.config.command_prefix))
 
         message = '\n'.join(lines)
         return Response(message, delete_after=30)
@@ -1816,6 +1817,26 @@ class MusicBot(discord.Client):
         await self.wait_until_ready()
 
         message_content = message.content.strip()
+        
+        # MICHI: adding auto responder
+        if message.author != self.user:
+            if message_content.lower().startswith('goodnight'):
+                reply_msg = 'Goodnight {}'.format(message.author.mention)
+                await self.safe_send_message(message.channel, reply_msg, expire_in=30)
+
+            if message_content.lower().startswith(self.config.command_prefix + 'play'):
+                reply_msg = 'The Bean is cookin\' up your request! {}'.format(message.author.mention)
+                await self.safe_send_message(message.channel, reply_msg ,expire_in=15)
+            
+            if message_content.lower().startswith(self.config.command_prefix + 'pause'):
+                reply_msg = 'The Bean has been eaten, NOOO!'
+                await self.safe_send_message(message.channel, reply_msg ,expire_in=15)
+             
+            if message_content.lower().startswith(self.config.command_prefix + 'summon'):
+                reply_msg = 'The Bean reporting, LET\'S BOUNCE!'
+                await self.safe_send_message(message.channel, reply_msg ,expire_in=15)
+        
+        # bot commands
         if not message_content.startswith(self.config.command_prefix):
             return
 
