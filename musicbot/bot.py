@@ -1821,8 +1821,8 @@ class MusicBot(discord.Client):
         # MICHI: adding auto responder
         if message.author != self.user:
             if message_content.lower().startswith('goodnight'):
-                reply_msg = 'Goodnight {}'.format(message.author.mention)
-                await self.safe_send_message(message.channel, reply_msg, expire_in=30)
+                reply_msg = 'GOODNIGHT!~ {} :heart:'.format(message.author.mention)
+                await self.safe_send_message(message.channel, reply_msg, expire_in=15)
 
             if message_content.lower().startswith(self.config.command_prefix + 'play'):
                 reply_msg = 'The Bean is cookin\' up your request! {}'.format(message.author.mention)
@@ -1834,6 +1834,10 @@ class MusicBot(discord.Client):
              
             if message_content.lower().startswith(self.config.command_prefix + 'summon'):
                 reply_msg = 'The Bean reporting, LET\'S BOUNCE!'
+                await self.safe_send_message(message.channel, reply_msg ,expire_in=15)
+                
+            if message_content.lower().startswith('ayy'):
+                reply_msg = 'lmao'
                 await self.safe_send_message(message.channel, reply_msg ,expire_in=15)
         
         # bot commands
