@@ -396,7 +396,7 @@ class MusicBot(discord.Client):
                 newmsg = '%s - your song **%s** is now playing in %s!' % (
                     entry.meta['author'].mention, entry.title, player.voice_client.channel.name)
             else:
-                newmsg = 'Now playing in %s: **%s**' % (
+                newmsg = 'The Bean is bouncing in %s: **%s**' % (
                     player.voice_client.channel.name, entry.title)
 
             if self.server_specific_data[channel.server]['last_np_msg']:
@@ -754,7 +754,7 @@ class MusicBot(discord.Client):
 
             helpmsg += ", ".join(commands)
             helpmsg += "```"
-            helpmsg += 'Isn\'t Bean Bot so nice to give you commands? Now don\'t cook me!'
+            helpmsg += 'Isn\'t Bean Bot so nice to give you commands? :smirk: Now don\'t cook me! :scream: '
             #helpmsg += "https://github.com/SexualRhinoceros/MusicBot/wiki/Commands-list"
 
             return Response(helpmsg, reply=True, delete_after=60)
@@ -1819,28 +1819,30 @@ class MusicBot(discord.Client):
         message_content = message.content.strip()
         
         # MICHI: adding auto responder
+        gnight_list = ['goodnight', 'good night', 'gnight', 'g\'night', 'gnite', 'good nite', 'goodnite', 'oyasuminasai']
+        
         if message.author != self.user:
-            if message_content.lower().startswith('goodnight'):
+            if any(message_content.lower().startswith(word) for word in gnight_list):
                 reply_msg = 'GOODNIGHT!~ {} :heart:'.format(message.author.mention)
                 await self.safe_send_message(message.channel, reply_msg, expire_in=15)
 
             if message_content.lower().startswith(self.config.command_prefix + 'play'):
-                reply_msg = 'The Bean is cookin\' up your request! {}'.format(message.author.mention)
-                await self.safe_send_message(message.channel, reply_msg ,expire_in=15)
+                reply_msg = ' :fork_knife_plate: The Bean is cookin\' up your request! :fork_knife_plate: {}'.format(message.author.mention)
+                await self.safe_send_message(message.channel, reply_msg ,expire_in=22)
             
             if message_content.lower().startswith(self.config.command_prefix + 'pause'):
-                reply_msg = 'The Bean has been eaten, NOOO!'
+                reply_msg = 'The Bean has been eaten, NOOO! :scream: '
                 await self.safe_send_message(message.channel, reply_msg ,expire_in=15)
              
             if message_content.lower().startswith(self.config.command_prefix + 'summon'):
-                reply_msg = 'The Bean reporting, LET\'S BOUNCE!'
+                reply_msg = 'The Bean reporting, LET\'S BOUNCE! :smirk:'
                 await self.safe_send_message(message.channel, reply_msg ,expire_in=15)
                 
             if message_content.lower().startswith('ayy'):
-                reply_msg = 'lmao'
-                await self.safe_send_message(message.channel, reply_msg ,expire_in=15)
+                reply_msg = 'lmao :smirk: '
+                await self.safe_send_message(message.channel, reply_msg)
         
-        # bot commands
+        # other non bot commands
         if not message_content.startswith(self.config.command_prefix):
             return
 
